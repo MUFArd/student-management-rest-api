@@ -84,19 +84,10 @@ class siswaController {
 
             }
 
-            const getNisSql = 'SELECT nis FROM siswa WHERE nis = ?'
-            const [getNisResult] = await db.promise().query(getNisSql, [data.nis])
-
-            if (getNisResult.length > 0) {
-                return res.status(400).json({
-                    status: 400,
-                    message: "Nis sudah terdaftar, gunakan nis lain"
-                })
-            }
-            const sql = 'INSERT INTO siswa (nis, nama, kelas, jurusan, alamat) VALUES (?, ?, ?, ?, ?)'
+            const sql = 'INSERT INTO siswa (nis, nama, kelas, jurusan, alamat, foto) VALUES (?, ?, ?, ?, ?, ?)'
 
             const [result] = await db.promise().query(sql, [
-                data.nis, data.nama, data.kelas, data.jurusan, data.alamat
+                data.nis, data.nama, data.kelas, data.jurusan, data.alamat, data.foto || null
             ])
 
             res.status(201).json({
@@ -131,21 +122,28 @@ class siswaController {
             const data = req.body
 
             // Validasi
-            if (!data.nama || !data.kelas || !data.jurusan || !data.alamat) {
+            if (!data.nis || !data.nama || !data.kelas || !data.jurusan || !data.alamat) {
 
                 return res.status(400).json({
                     status: 400,
-                    message: " nama, kelas, jurusan, dan alamat wajib diisi"
+                    message: "Nis, nama, kelas, jurusan, dan alamat wajib diisi"
                 })
 
             }
 
+            if (!Number.isFinite(Number(data.nis))) {
 
+                return res.status(400).json({
+                    status: 400,
+                    message: "Nis harus berupa angka"
+                })
 
-            const sql = 'UPDATE siswa SET nama = ?, kelas = ?, jurusan = ?, alamat = ? WHERE id = ?'
+            }
+
+            const sql = 'UPDATE siswa SET nis = ?, nama = ?, kelas = ?, jurusan = ?, alamat = ?, foto = ? WHERE id = ?'
 
             const [result] = await db.promise().query(sql, [
-                data.nama, data.kelas, data.jurusan, data.alamat,
+                data.nis, data.nama, data.kelas, data.jurusan, data.alamat, data.foto || null,
                 id
             ])
 
