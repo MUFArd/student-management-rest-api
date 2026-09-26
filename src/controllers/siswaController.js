@@ -14,8 +14,8 @@ class siswaController {
         } catch (error) {
             console.log(error)
 
-            res.status(400).json({
-                status: 400,
+            res.status(500).json({
+                status: 500,
                 message: "Gagal mengambil data siswa"
             })
         }
@@ -34,7 +34,7 @@ class siswaController {
             if (result.length === 0) {
 
                 return res.status(404).json({
-                    status: "404",
+                    status: 404,
                     message: "Siswa tidak ditemukan"
                 })
 
@@ -50,9 +50,9 @@ class siswaController {
 
             console.log(error)
 
-            res.status(400).json({
-                status: 400,
-                message: "Gagal Mengambil data siswa"
+            res.status(500).json({
+                status: 500,
+                message: "Gagal mengambil data siswa"
             })
 
         }
@@ -69,8 +69,8 @@ class siswaController {
             if (!data.nis || !data.nama || !data.kelas || !data.jurusan || !data.alamat) {
 
                 return res.status(400).json({
-                    status: "400",
-                    message: "nis, nama, kelas, jurusan, dan alamat wajib diisi"
+                    status: 400,
+                    message: "Nis, nama, kelas, jurusan, dan alamat wajib diisi"
                 })
 
             }
@@ -78,12 +78,21 @@ class siswaController {
             if (!Number.isFinite(Number(data.nis))) {
 
                 return res.status(400).json({
-                    status: "400",
+                    status: 400,
                     message: "Nis harus berupa angka"
                 })
 
             }
 
+            const getNisSql = 'SELECT nis FROM siswa WHERE nis = ?'
+            const [getNisResult] = await db.promise().query(getNisSql, [data.nis])
+
+            if (getNisResult.length > 0) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Nis sudah terdaftar, gunakan nis lain"
+                })
+            }
             const sql = 'INSERT INTO siswa (nis, nama, kelas, jurusan, alamat) VALUES (?, ?, ?, ?, ?)'
 
             const [result] = await db.promise().query(sql, [
@@ -91,8 +100,8 @@ class siswaController {
             ])
 
             res.status(201).json({
-                status: "201",
-                message: "Data Berhasil Masuk",
+                status: 201,
+                message: "Data siswa berhasil ditambahkan",
                 data: {
                     id: result.insertId,
                     ...data
@@ -104,8 +113,8 @@ class siswaController {
             console.log(error)
 
             res.status(500).json({
-                status: "500",
-                message: "Terjadi kesalahan pada server"
+                status: 500,
+                message: "Gagal menambahkan data siswa"
             })
 
         }
@@ -122,43 +131,36 @@ class siswaController {
             const data = req.body
 
             // Validasi
-            if (!data.nis || !data.nama || !data.kelas || !data.jurusan || !data.alamat) {
+            if (!data.nama || !data.kelas || !data.jurusan || !data.alamat) {
 
                 return res.status(400).json({
-                    status: "400",
-                    message: "nis, nama, kelas, jurusan, dan alamat wajib diisi"
+                    status: 400,
+                    message: " nama, kelas, jurusan, dan alamat wajib diisi"
                 })
 
             }
 
-            if (!Number.isFinite(Number(data.nis))) {
 
-                return res.status(400).json({
-                    status: "400",
-                    message: "Nis harus berupa angka"
-                })
 
-            }
-
-            const sql = 'UPDATE siswa SET nis = ?, nama = ?, kelas = ?, jurusan = ?, alamat = ? WHERE id = ?'
+            const sql = 'UPDATE siswa SET nama = ?, kelas = ?, jurusan = ?, alamat = ? WHERE id = ?'
 
             const [result] = await db.promise().query(sql, [
-                data.nis, data.nama, data.kelas, data.jurusan, data.alamat,
+                data.nama, data.kelas, data.jurusan, data.alamat,
                 id
             ])
 
             if (result.affectedRows === 0) {
 
                 return res.status(404).json({
-                    status: "404",
+                    status: 404,
                     message: "Siswa tidak ditemukan"
                 })
 
             }
 
-            res.json({
-                status: "200",
-                message: "Data Berhasil Diubah",
+            res.status(200).json({
+                status: 200,
+                message: "Data siswa berhasil diubah",
                 data: {
                     id: id,
                     ...data
@@ -170,8 +172,8 @@ class siswaController {
             console.log(error)
 
             res.status(500).json({
-                status: "500",
-                message: "Terjadi kesalahan pada server"
+                status: 500,
+                message: "Gagal mengupdate data siswa"
             })
 
         }
@@ -192,15 +194,15 @@ class siswaController {
             if (result.affectedRows === 0) {
 
                 return res.status(404).json({
-                    status: "404",
+                    status: 404,
                     message: "Siswa tidak ditemukan"
                 })
 
             }
 
-            res.json({
-                status: "200",
-                message: "Data Berhasil Dihapus"
+            res.status(200).json({
+                status: 200,
+                message: "Data siswa berhasil dihapus"
             })
 
         } catch (error) {
@@ -208,8 +210,8 @@ class siswaController {
             console.log(error)
 
             res.status(500).json({
-                status: "500",
-                message: "Terjadi kesalahan pada server"
+                status: 500,
+                message: "Gagal menghapus data siswa"
             })
 
         }
