@@ -4,7 +4,7 @@ const db = mysql.createConnection({
     host:'localhost',
     user:'root',
     password:'',
-    database:'student-management-rest-api'
+    database:'student-management'
 })
 
 module.exports = db
