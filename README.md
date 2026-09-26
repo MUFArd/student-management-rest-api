@@ -118,3 +118,20 @@ Student Management REST API adalah aplikasi manajemen data siswa berbasis REST A
 - **Proyek:** Tugas REST API — Student Management System
 
 ---
+
+## OUTPUT
+
+- **Link Github:** https://github.com/MUFArd/student-management-rest-api
+- **Screenshot FrontEnd:** 
+![Daftar Siswa](./page/assets/img/daftarsiswa.png)
+![Form Siswa](./page/assets/img/formadd.png)
+![Dark Mode](./page/assets/img/modegelap.png)
+
+- **Screenshot Pengujian REST API:**
+![GetSiswaAll](./page/assets/img/getsiswaall.png)
+![GetSiswaById](./page/assets/img/getsiswabyid.png)
+![CreateSiswa](./page/assets/img/createsiswa.png)
+![UpdateSiswa](./page/assets/img/updatesiswa.png)
+![DeleteSiswa](./page/assets/img/deletesiswa.png)
+
+

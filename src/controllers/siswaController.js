@@ -122,28 +122,19 @@ class siswaController {
             const data = req.body
 
             // Validasi
-            if (!data.nis || !data.nama || !data.kelas || !data.jurusan || !data.alamat) {
+            if ( !data.nama || !data.kelas || !data.jurusan || !data.alamat) {
 
                 return res.status(400).json({
                     status: 400,
-                    message: "Nis, nama, kelas, jurusan, dan alamat wajib diisi"
+                    message: " nama, kelas, jurusan, dan alamat wajib diisi"
                 })
 
             }
 
-            if (!Number.isFinite(Number(data.nis))) {
-
-                return res.status(400).json({
-                    status: 400,
-                    message: "Nis harus berupa angka"
-                })
-
-            }
-
-            const sql = 'UPDATE siswa SET nis = ?, nama = ?, kelas = ?, jurusan = ?, alamat = ?, foto = ? WHERE id = ?'
+            const sql = 'UPDATE siswa SET nama = ?, kelas = ?, jurusan = ?, alamat = ?, foto = ? WHERE id = ?'
 
             const [result] = await db.promise().query(sql, [
-                data.nis, data.nama, data.kelas, data.jurusan, data.alamat, data.foto || null,
+                 data.nama, data.kelas, data.jurusan, data.alamat, data.foto || null,
                 id
             ])
 
